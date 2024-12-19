@@ -29,12 +29,24 @@ public class WithdrawCash extends TitledOperation{
         this.getOperationContext().getAtm().setTitle("Teclee la cantidad que desea");
         ATMNumberCapturer a = new ATMNumberCapturer(this.getOperationContext().getAtm());
         int cant = a.captureAmount();
+        String retirada="\tRETIRADA \n ================== \n";
         try {
-            if( this.getOperationContext().getServer().balance(this.getOperationContext().getAtm().getCardNumber()) >=cant){
+            if( this.getOperationContext().getServer().avaiable(this.getOperationContext().getAtm().getCardNumber()) >=cant){
+                this.getOperationContext().getAtm().setTitle("Cantidad");
                 this.getOperationContext().getAtm().expelAmount(cant, 30);
-                this.getOperationContext().getAtm().print(List.of(cant + "€"));
+                this.getOperationContext().getAtm().print(List.of(retirada + cant + "€"));
                this.getOperationContext().getServer().doOperation(this.getOperationContext().getAtm().getCardNumber(), cant);
+            } else {
+                this.getOperationContext().getAtm().setTitle("Saldo insuficiente");
+                this.getOperationContext().getAtm().setInputAreaText(null);
+                getOperationContext().getAtm().setOption(4,"Terminar");
+                char event = this.getOperationContext().getAtm().waitEvent(30);
+                if (event == 'E'){
+                    ClientGoodbye salida = new ClientGoodbye(getOperationContext());
+                    salida.doOperation();
+                }
             }
+
             
         } catch (CommunicationException ex) {
             Logger.getLogger(WithdrawCash.class.getName()).log(Level.SEVERE, null, ex);

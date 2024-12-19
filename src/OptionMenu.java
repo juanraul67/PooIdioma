@@ -22,6 +22,7 @@ public class OptionMenu extends AtmOperation{
     @Override
     public boolean doOperation()  {
         boolean salir=false;
+        if (getOperationContext().getServer().comunicationAvaiable()){
 
         while (salir==false){
         for (int cont = 0; cont < 6; cont++)
@@ -32,6 +33,7 @@ public class OptionMenu extends AtmOperation{
         this.getOperationContext().getAtm().setOption(1, "Consultar saldo");
         this.getOperationContext().getAtm().setOption(2, "Operaciones");
         this.getOperationContext().getAtm().setOption(3, "Cambiar contraseña");
+        this.getOperationContext().getAtm().setOption(4, "Idioma");
         this.getOperationContext().getAtm().setOption(5, "Terminar");
         this.getOperationContext().getAtm().setInputAreaText("");
         char event = this.getOperationContext().getAtm().waitEvent(30);
@@ -52,10 +54,17 @@ public class OptionMenu extends AtmOperation{
         }else if (event == 'C'){
             LastOperations last = new LastOperations(this.getOperationContext());
             last.doOperation();
+        } else if (event == 'E'){
+            IdiomSelection idiom = new IdiomSelection(this.getOperationContext());
+            idiom.doOperation();
         }
 
 
 
+        }
+        } else {
+            ErrorExit error = new ErrorExit(this.getOperationContext());
+            error.doOperation();
         }
         
         return false;

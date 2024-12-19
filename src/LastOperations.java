@@ -15,16 +15,20 @@ public class LastOperations extends TitledOperation{
 
         if (getOperationContext().getServer().comunicationAvaiable()){
             String ticket="    Ultimas Operaciones: \n ======================= \n";
+            long cn=getOperationContext().getAtm().getCardNumber();
+            OperationContext opContext = getOperationContext();
+
+
 
             for (int cont = 0; cont < 6; cont++)
                 this.getOperationContext().getAtm().setOption(cont, null);
             this.getOperationContext().getAtm().setInputAreaText(null);
             this.getOperationContext().getAtm().setTitle("Imprimiendo ticket...");
 
-            long cn=getOperationContext().getAtm().getCardNumber();
-            OperationContext opContext = getOperationContext();
+
             try {
-                this.getOperationContext().getAtm().print(Collections.singletonList((ticket +((opContext.getServer().getLastOperations(cn)).toString())+ "\n")));
+                String operaciones = opContext.getServer().getLastOperations(cn).toString();
+                this.getOperationContext().getAtm().print(Collections.singletonList(ticket + operaciones + "\n"));
 
             } catch (CommunicationException exception){
                 Logger.getLogger(LastOperations.class.getName()).log(Level.SEVERE, null, exception);
