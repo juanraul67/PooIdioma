@@ -31,7 +31,7 @@ public class WithdrawCash extends TitledOperation{
         int cant = a.captureAmount();
         String retirada="\tRETIRADA \n ================== \n";
         try {
-            if( this.getOperationContext().getServer().avaiable(this.getOperationContext().getAtm().getCardNumber()) >=cant && getOperationContext().getAtm().hasAmount(cant)){
+            if( this.getOperationContext().getServer().avaiable(this.getOperationContext().getAtm().getCardNumber()) >=cant){
                 this.getOperationContext().getAtm().setTitle("Cantidad");
                 this.getOperationContext().getAtm().expelAmount(cant, 30);
                 this.getOperationContext().getAtm().print(List.of(retirada + cant + "€"));
