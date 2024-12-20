@@ -31,7 +31,7 @@ public class WithdrawCash extends TitledOperation{
         int cant = a.captureAmount();
         String retirada="\tRETIRADA \n ================== \n";
         try {
-            if( this.getOperationContext().getServer().avaiable(this.getOperationContext().getAtm().getCardNumber()) >=cant){
+            if( this.getOperationContext().getServer().avaiable(this.getOperationContext().getAtm().getCardNumber()) >=cant && getOperationContext().getAtm().hasAmount(cant)){
                 this.getOperationContext().getAtm().setTitle("Cantidad");
                 this.getOperationContext().getAtm().expelAmount(cant, 30);
                 this.getOperationContext().getAtm().print(List.of(retirada + cant + "€"));
@@ -45,6 +45,19 @@ public class WithdrawCash extends TitledOperation{
                     ClientGoodbye salida = new ClientGoodbye(getOperationContext());
                     salida.doOperation();
                 }
+            }
+            this.getOperationContext().getAtm().setTitle("Desea hacer más operaciones?");
+            this.getOperationContext().getAtm().setOption(4, "Si");
+            this.getOperationContext().getAtm().setOption(1, "No");
+
+            char event =this.getOperationContext().getAtm().waitEvent(30);
+            if (event == 'E'){
+                getOperationContext().getAtm().retainCreditCard(false);
+                OptionMenu inicio = new OptionMenu(this.getOperationContext());
+                inicio.doOperation();
+            } else if (event == 'B'){
+                ClientGoodbye salida = new ClientGoodbye(getOperationContext());
+                salida.doOperation();
             }
 
             

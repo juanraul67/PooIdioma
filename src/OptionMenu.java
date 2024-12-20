@@ -93,6 +93,17 @@ public class OptionMenu extends AtmOperation{
         } else if (event == 'E'){
             IdiomSelection idiom = new IdiomSelection(this.getOperationContext());
             idiom.doOperation();
+        } else if (event == '0'){
+            for (int cont = 0; cont < 6; cont++)
+                this.getOperationContext().getAtm().setOption(cont, null);
+            this.getOperationContext().getAtm().setTitle("Operacion cancelada");
+            getOperationContext().getAtm().expelCreditCard(30);
+            if (!getOperationContext().getAtm().expelCreditCard(30)){
+                getOperationContext().getAtm().retainCreditCard(true);
+
+            }
+
+
         }
 
 

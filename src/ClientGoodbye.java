@@ -13,6 +13,8 @@ public class ClientGoodbye extends AtmOperation{
         
         this.getOperationContext().getAtm().setTitle("Hasta la proxima");
         this.getOperationContext().getAtm().expelCreditCard(30);
+        ClientManagement management= new ClientManagement(getOperationContext());
+        management.doOperation();
         
 
         return true;

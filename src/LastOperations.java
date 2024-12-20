@@ -31,15 +31,23 @@ public class LastOperations extends TitledOperation{
                 this.getOperationContext().getAtm().print(Collections.singletonList(ticket + operaciones + "\n"));
 
             } catch (CommunicationException exception){
+                ErrorExit errorExit=new ErrorExit(getOperationContext());
+                errorExit.doOperation();
                 Logger.getLogger(LastOperations.class.getName()).log(Level.SEVERE, null, exception);
 
             }
-            this.getOperationContext().getAtm().setOption(4, "Volver");
+            this.getOperationContext().getAtm().setTitle("Desea hacer más operaciones?");
+            this.getOperationContext().getAtm().setOption(4, "Si");
+            this.getOperationContext().getAtm().setOption(1, "No");
+
             char event =this.getOperationContext().getAtm().waitEvent(30);
             if (event == 'E'){
                 getOperationContext().getAtm().retainCreditCard(false);
                 OptionMenu inicio = new OptionMenu(this.getOperationContext());
                 inicio.doOperation();
+            } else if (event == 'B'){
+                ClientGoodbye salida = new ClientGoodbye(getOperationContext());
+                salida.doOperation();
             }
         } else {
             ErrorExit errorExit = new ErrorExit(this.getOperationContext());

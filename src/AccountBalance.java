@@ -32,22 +32,25 @@ public class AccountBalance extends TitledOperation{
         } catch (CommunicationException ex) {
             Logger.getLogger(AccountBalance.class.getName()).log(Level.SEVERE, null, ex);
         }
-     this.getOperationContext().getAtm().setOption(4, "Volver");
-     char event =this.getOperationContext().getAtm().waitEvent(30);
-     if(event=='E'){
-         getOperationContext().getAtm().retainCreditCard(false);
-         OptionMenu menu = new OptionMenu(this.getOperationContext());
-         menu.doOperation();
-         
-         return false;
-     }else{
-         return false;
-     }
+            this.getOperationContext().getAtm().setTitle("Desea hacer más operaciones?");
+            this.getOperationContext().getAtm().setOption(4, "Si");
+            this.getOperationContext().getAtm().setOption(1, "No");
+
+            char event =this.getOperationContext().getAtm().waitEvent(30);
+            if (event == 'E'){
+                getOperationContext().getAtm().retainCreditCard(false);
+                OptionMenu inicio = new OptionMenu(this.getOperationContext());
+                inicio.doOperation();
+            } else if (event == 'B'){
+                ClientGoodbye salida = new ClientGoodbye(getOperationContext());
+                salida.doOperation();
+            }
     } else {
             ErrorExit errorExit = new ErrorExit(this.getOperationContext());
             errorExit.doOperation();
             return false;
         }
+        return false;
     }
 
 }
